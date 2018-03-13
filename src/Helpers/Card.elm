@@ -1,4 +1,4 @@
-module CardHelpers exposing (..)
+module Helpers.Card exposing (..)
 
 import Types exposing (..)
 import List.Extra exposing (group)
@@ -32,7 +32,7 @@ isFirstCard10 : List Card -> Bool
 isFirstCard10 cardList =
     let
         firstCardValue =
-            getFirstCard cardList
+            getTopCard cardList
                 |> .value
     in
         firstCardValue == 10
@@ -45,7 +45,7 @@ straight cardList =
             ( List.take 1 cardList, List.drop 1 cardList )
 
         headValue =
-            getFirstCard head
+            getTopCard head
                 |> .value
 
         straightList =
@@ -61,7 +61,7 @@ flush : List Card -> Bool
 flush cardList =
     let
         firstcardsuit =
-            getFirstCard cardList
+            getTopCard cardList
                 |> .suit
     in
         List.all (\card -> card.suit == firstcardsuit) cardList
@@ -97,11 +97,11 @@ twoPair cardList =
 -- helpers
 
 
-getFirstCard : List Card -> Card
-getFirstCard cardList =
+getTopCard : List Card -> Card
+getTopCard cardList =
     cardList
         |> List.head
-        |> Maybe.withDefault { suit = "", name = "", value = 0, image = "" }
+        |> Maybe.withDefault (Card "" "" 0 "")
 
 
 sortHand : List Card -> List Card
@@ -120,3 +120,26 @@ xOfAKind int cardList =
         |> List.map (\card -> card.value)
         |> List.Extra.group
         |> List.any (\list -> List.length list == int)
+
+
+createPlayers : Int -> List Player
+createPlayers numPlayers =
+    numPlayers
+        |> List.range 1
+        |> List.map (\_ -> { hand = [], handType = NoHand })
+
+
+
+-- take the same number of cards off of the deck as there is players (List.take)
+-- List.drop the number of players from the deck for the remainingCards
+-- then use that list to add a card to each of the players
+
+
+dealHand2 : Model -> Model
+dealHand2 model =
+    let
+        test =
+            model.players
+                |> List.map (\player -> { player | hand = player.hand ++ [] })
+    in
+        model
