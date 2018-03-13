@@ -1,9 +1,9 @@
-module HtmlHelpers exposing (..)
+module Helpers.Html exposing (..)
 
 import Types exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (class, style)
-import CardHelpers exposing (sortHand)
+import Helpers.Card exposing (sortHand)
 
 
 makeCardNodes : List Card -> List (Html Msg)

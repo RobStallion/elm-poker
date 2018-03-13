@@ -1,4 +1,4 @@
-module Request exposing (..)
+module Request.Cards exposing (..)
 
 import Types exposing (..)
 import Http
@@ -8,7 +8,7 @@ import Json.Decode.Pipeline exposing (..)
 
 getCardsFromApi : Cmd Msg
 getCardsFromApi =
-    Http.get "https://api.myjson.com/bins/11pvbh" cardListDecoder
+    Http.get "https://api.myjson.com/bins/ot0r1" cardListDecoder
         |> Http.send RecieveCards
 
 

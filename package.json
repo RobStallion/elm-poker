@@ -1,0 +1,29 @@
+{
+  "name": "poker-elm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "dev": "npm run elm-dev",
+    "build": "npm run elm-build",
+    "elm-dev": "elm-live src/Main.elm --output=public/elm.js --dir=public --debug --pushstate --open",
+    "elm-build": "elm-make src/Main.elm --output=public/elm.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RobStallion/elm-poker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RobStallion/elm-poker/issues"
+  },
+  "homepage": "https://github.com/RobStallion/elm-poker#readme"
+}

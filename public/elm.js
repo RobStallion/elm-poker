@@ -15391,22 +15391,26 @@ var _elm_lang$http$Http$StringPart = F2(
 	});
 var _elm_lang$http$Http$stringPart = _elm_lang$http$Http$StringPart;
 
-var _user$project$Types$Model = F4(
-	function (a, b, c, d) {
-		return {deck: a, remainingCards: b, hand: c, handType: d};
+var _user$project$Types$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {deck: a, remainingCards: b, hand: c, handType: d, players: e, numPlayers: f};
+	});
+var _user$project$Types$Player = F2(
+	function (a, b) {
+		return {hand: a, handType: b};
 	});
 var _user$project$Types$Card = F4(
 	function (a, b, c, d) {
 		return {suit: a, name: b, value: c, image: d};
 	});
-var _user$project$Types$Reshuffle = {ctor: 'Reshuffle'};
 var _user$project$Types$CheckHand = function (a) {
 	return {ctor: 'CheckHand', _0: a};
 };
-var _user$project$Types$DealHand = {ctor: 'DealHand'};
+var _user$project$Types$Deal = {ctor: 'Deal'};
 var _user$project$Types$GetShuffledDeck = function (a) {
 	return {ctor: 'GetShuffledDeck', _0: a};
 };
+var _user$project$Types$Shuffle = {ctor: 'Shuffle'};
 var _user$project$Types$RecieveCards = function (a) {
 	return {ctor: 'RecieveCards', _0: a};
 };
@@ -15422,7 +15426,34 @@ var _user$project$Types$FourOfAKind = {ctor: 'FourOfAKind'};
 var _user$project$Types$StraightFlush = {ctor: 'StraightFlush'};
 var _user$project$Types$RoyalFlush = {ctor: 'RoyalFlush'};
 
-var _user$project$CardHelpers$xOfAKind = F2(
+var _user$project$Helpers_Card$dealHand2 = function (model) {
+	var test = A2(
+		_elm_lang$core$List$map,
+		function (player) {
+			return _elm_lang$core$Native_Utils.update(
+				player,
+				{
+					hand: A2(
+						_elm_lang$core$Basics_ops['++'],
+						player.hand,
+						{ctor: '[]'})
+				});
+		},
+		model.players);
+	return model;
+};
+var _user$project$Helpers_Card$createPlayers = function (numPlayers) {
+	return A2(
+		_elm_lang$core$List$map,
+		function (_p0) {
+			return {
+				hand: {ctor: '[]'},
+				handType: _user$project$Types$NoHand
+			};
+		},
+		A2(_elm_lang$core$List$range, 1, numPlayers));
+};
+var _user$project$Helpers_Card$xOfAKind = F2(
 	function ($int, cardList) {
 		return A2(
 			_elm_lang$core$List$any,
@@ -15439,14 +15470,14 @@ var _user$project$CardHelpers$xOfAKind = F2(
 					},
 					cardList)));
 	});
-var _user$project$CardHelpers$dealHand = function (cardList) {
+var _user$project$Helpers_Card$dealHand = function (cardList) {
 	return {
 		ctor: '_Tuple2',
 		_0: A2(_elm_lang$core$List$take, 5, cardList),
 		_1: A2(_elm_lang$core$List$drop, 5, cardList)
 	};
 };
-var _user$project$CardHelpers$sortHand = function (cardList) {
+var _user$project$Helpers_Card$sortHand = function (cardList) {
 	return A2(
 		_elm_lang$core$List$sortBy,
 		function (_) {
@@ -15454,13 +15485,13 @@ var _user$project$CardHelpers$sortHand = function (cardList) {
 		},
 		cardList);
 };
-var _user$project$CardHelpers$getFirstCard = function (cardList) {
+var _user$project$Helpers_Card$getTopCard = function (cardList) {
 	return A2(
 		_elm_lang$core$Maybe$withDefault,
-		{suit: '', name: '', value: 0, image: ''},
+		A4(_user$project$Types$Card, '', '', 0, ''),
 		_elm_lang$core$List$head(cardList));
 };
-var _user$project$CardHelpers$twoPair = function (cardList) {
+var _user$project$Helpers_Card$twoPair = function (cardList) {
 	var groupedCards = _elm_community$list_extra$List_Extra$group(
 		A2(
 			_elm_lang$core$List$map,
@@ -15479,14 +15510,14 @@ var _user$project$CardHelpers$twoPair = function (cardList) {
 		},
 		groupedCards);
 };
-var _user$project$CardHelpers$pair = _user$project$CardHelpers$xOfAKind(2);
-var _user$project$CardHelpers$threeOfAKind = _user$project$CardHelpers$xOfAKind(3);
-var _user$project$CardHelpers$fourOfAKind = _user$project$CardHelpers$xOfAKind(4);
-var _user$project$CardHelpers$flush = function (cardList) {
+var _user$project$Helpers_Card$pair = _user$project$Helpers_Card$xOfAKind(2);
+var _user$project$Helpers_Card$threeOfAKind = _user$project$Helpers_Card$xOfAKind(3);
+var _user$project$Helpers_Card$fourOfAKind = _user$project$Helpers_Card$xOfAKind(4);
+var _user$project$Helpers_Card$flush = function (cardList) {
 	var firstcardsuit = function (_) {
 		return _.suit;
 	}(
-		_user$project$CardHelpers$getFirstCard(cardList));
+		_user$project$Helpers_Card$getTopCard(cardList));
 	return A2(
 		_elm_lang$core$List$all,
 		function (card) {
@@ -15494,39 +15525,39 @@ var _user$project$CardHelpers$flush = function (cardList) {
 		},
 		cardList);
 };
-var _user$project$CardHelpers$straight = function (cardList) {
+var _user$project$Helpers_Card$straight = function (cardList) {
 	var cardListRanks = A2(
 		_elm_lang$core$List$map,
 		function (card) {
 			return card.value;
 		},
 		cardList);
-	var _p0 = {
+	var _p1 = {
 		ctor: '_Tuple2',
 		_0: A2(_elm_lang$core$List$take, 1, cardList),
 		_1: A2(_elm_lang$core$List$drop, 1, cardList)
 	};
-	var head = _p0._0;
-	var rest = _p0._1;
+	var head = _p1._0;
+	var rest = _p1._1;
 	var headValue = function (_) {
 		return _.value;
 	}(
-		_user$project$CardHelpers$getFirstCard(head));
+		_user$project$Helpers_Card$getTopCard(head));
 	var straightList = A2(_elm_lang$core$List$range, headValue, headValue + 4);
 	return _elm_lang$core$Native_Utils.eq(straightList, cardListRanks);
 };
-var _user$project$CardHelpers$isFirstCard10 = function (cardList) {
+var _user$project$Helpers_Card$isFirstCard10 = function (cardList) {
 	var firstCardValue = function (_) {
 		return _.value;
 	}(
-		_user$project$CardHelpers$getFirstCard(cardList));
+		_user$project$Helpers_Card$getTopCard(cardList));
 	return _elm_lang$core$Native_Utils.eq(firstCardValue, 10);
 };
-var _user$project$CardHelpers$handType = function (cardList) {
-	return (_user$project$CardHelpers$isFirstCard10(cardList) && _user$project$CardHelpers$straight(cardList)) ? _user$project$Types$RoyalFlush : ((_user$project$CardHelpers$straight(cardList) && _user$project$CardHelpers$flush(cardList)) ? _user$project$Types$StraightFlush : (_user$project$CardHelpers$fourOfAKind(cardList) ? _user$project$Types$FourOfAKind : ((_user$project$CardHelpers$threeOfAKind(cardList) && _user$project$CardHelpers$pair(cardList)) ? _user$project$Types$FullHouse : (_user$project$CardHelpers$flush(cardList) ? _user$project$Types$Flush : (_user$project$CardHelpers$straight(cardList) ? _user$project$Types$Straight : (_user$project$CardHelpers$threeOfAKind(cardList) ? _user$project$Types$ThreeOfAKind : (_user$project$CardHelpers$twoPair(cardList) ? _user$project$Types$TwoPair : (_user$project$CardHelpers$pair(cardList) ? _user$project$Types$Pair : _user$project$Types$HighCard))))))));
+var _user$project$Helpers_Card$handType = function (cardList) {
+	return (_user$project$Helpers_Card$isFirstCard10(cardList) && _user$project$Helpers_Card$straight(cardList)) ? _user$project$Types$RoyalFlush : ((_user$project$Helpers_Card$straight(cardList) && _user$project$Helpers_Card$flush(cardList)) ? _user$project$Types$StraightFlush : (_user$project$Helpers_Card$fourOfAKind(cardList) ? _user$project$Types$FourOfAKind : ((_user$project$Helpers_Card$threeOfAKind(cardList) && _user$project$Helpers_Card$pair(cardList)) ? _user$project$Types$FullHouse : (_user$project$Helpers_Card$flush(cardList) ? _user$project$Types$Flush : (_user$project$Helpers_Card$straight(cardList) ? _user$project$Types$Straight : (_user$project$Helpers_Card$threeOfAKind(cardList) ? _user$project$Types$ThreeOfAKind : (_user$project$Helpers_Card$twoPair(cardList) ? _user$project$Types$TwoPair : (_user$project$Helpers_Card$pair(cardList) ? _user$project$Types$Pair : _user$project$Types$HighCard))))))));
 };
 
-var _user$project$HtmlHelpers$makeCardNodes = function (listOfCards) {
+var _user$project$Helpers_Html$makeCardNodes = function (listOfCards) {
 	return A2(
 		_elm_lang$core$List$map,
 		function (card) {
@@ -15559,10 +15590,10 @@ var _user$project$HtmlHelpers$makeCardNodes = function (listOfCards) {
 				},
 				{ctor: '[]'});
 		},
-		_user$project$CardHelpers$sortHand(listOfCards));
+		_user$project$Helpers_Card$sortHand(listOfCards));
 };
 
-var _user$project$Request$cardDecoder = A3(
+var _user$project$Request_Cards$cardDecoder = A3(
 	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
 	'imageUrl',
 	_elm_lang$core$Json_Decode$string,
@@ -15579,16 +15610,16 @@ var _user$project$Request$cardDecoder = A3(
 				'suit',
 				_elm_lang$core$Json_Decode$string,
 				_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Types$Card)))));
-var _user$project$Request$cardListDecoder = A2(
+var _user$project$Request_Cards$cardListDecoder = A2(
 	_elm_lang$core$Json_Decode$field,
 	'cards',
-	_elm_lang$core$Json_Decode$list(_user$project$Request$cardDecoder));
-var _user$project$Request$getCardsFromApi = A2(
+	_elm_lang$core$Json_Decode$list(_user$project$Request_Cards$cardDecoder));
+var _user$project$Request_Cards$getCardsFromApi = A2(
 	_elm_lang$http$Http$send,
 	_user$project$Types$RecieveCards,
-	A2(_elm_lang$http$Http$get, 'https://api.myjson.com/bins/11pvbh', _user$project$Request$cardListDecoder));
+	A2(_elm_lang$http$Http$get, 'https://api.myjson.com/bins/ot0r1', _user$project$Request_Cards$cardListDecoder));
 
-var _user$project$Main$update = F2(
+var _user$project$State$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
 		switch (_p0.ctor) {
@@ -15605,34 +15636,7 @@ var _user$project$Main$update = F2(
 				} else {
 					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				}
-			case 'GetShuffledDeck':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{deck: _p0._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'DealHand':
-				var _p1 = _user$project$CardHelpers$dealHand(model.deck);
-				var hand = _p1._0;
-				var remainingCards = _p1._1;
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{hand: hand, remainingCards: remainingCards}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'CheckHand':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{handType: _p0._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			default:
+			case 'Shuffle':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -15647,9 +15651,46 @@ var _user$project$Main$update = F2(
 						_user$project$Types$GetShuffledDeck,
 						_elm_community$random_extra$Random_List$shuffle(model.deck))
 				};
+			case 'GetShuffledDeck':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{deck: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'Deal':
+				var _p1 = _user$project$Helpers_Card$dealHand(model.deck);
+				var hand = _p1._0;
+				var remainingCards = _p1._1;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{hand: hand, remainingCards: remainingCards}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{handType: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 		}
 	});
-var _user$project$Main$view = function (model) {
+var _user$project$State$initialModel = {
+	deck: {ctor: '[]'},
+	remainingCards: {ctor: '[]'},
+	hand: {ctor: '[]'},
+	handType: _user$project$Types$NoHand,
+	players: {ctor: '[]'},
+	numPlayers: 4
+};
+var _user$project$State$init = {ctor: '_Tuple2', _0: _user$project$State$initialModel, _1: _user$project$Request_Cards$getCardsFromApi};
+
+var _user$project$View$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
@@ -15659,7 +15700,7 @@ var _user$project$Main$view = function (model) {
 				_elm_lang$html$Html$button,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onClick(_user$project$Types$DealHand),
+					_0: _elm_lang$html$Html_Events$onClick(_user$project$Types$Deal),
 					_1: {ctor: '[]'}
 				},
 				{
@@ -15672,7 +15713,7 @@ var _user$project$Main$view = function (model) {
 				_0: A2(
 					_elm_lang$html$Html$div,
 					{ctor: '[]'},
-					_user$project$HtmlHelpers$makeCardNodes(model.hand)),
+					_user$project$Helpers_Html$makeCardNodes(model.hand)),
 				_1: {
 					ctor: '::',
 					_0: A2(
@@ -15681,8 +15722,8 @@ var _user$project$Main$view = function (model) {
 							ctor: '::',
 							_0: _elm_lang$html$Html_Events$onClick(
 								_user$project$Types$CheckHand(
-									_user$project$CardHelpers$handType(
-										_user$project$CardHelpers$sortHand(model.hand)))),
+									_user$project$Helpers_Card$handType(
+										_user$project$Helpers_Card$sortHand(model.hand)))),
 							_1: {ctor: '[]'}
 						},
 						{
@@ -15707,7 +15748,7 @@ var _user$project$Main$view = function (model) {
 								_elm_lang$html$Html$button,
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html_Events$onClick(_user$project$Types$Reshuffle),
+									_0: _elm_lang$html$Html_Events$onClick(_user$project$Types$Shuffle),
 									_1: {ctor: '[]'}
 								},
 								{
@@ -15722,25 +15763,19 @@ var _user$project$Main$view = function (model) {
 			}
 		});
 };
-var _user$project$Main$initialModel = {
-	deck: {ctor: '[]'},
-	remainingCards: {ctor: '[]'},
-	hand: {ctor: '[]'},
-	handType: _user$project$Types$NoHand
-};
-var _user$project$Main$init = {ctor: '_Tuple2', _0: _user$project$Main$initialModel, _1: _user$project$Request$getCardsFromApi};
+
 var _user$project$Main$main = _elm_lang$html$Html$program(
 	{
-		init: _user$project$Main$init,
-		view: _user$project$Main$view,
-		update: _user$project$Main$update,
+		init: _user$project$State$init,
+		view: _user$project$View$view,
+		update: _user$project$State$update,
 		subscriptions: _elm_lang$core$Basics$always(_elm_lang$core$Platform_Sub$none)
 	})();
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Types.Msg":{"args":[],"tags":{"RecieveCards":["Result.Result Http.Error (List Types.Card)"],"DealHand":[],"CheckHand":["Types.HandType"],"GetShuffledDeck":["List Types.Card"],"Reshuffle":[]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Types.HandType":{"args":[],"tags":{"Flush":[],"HighCard":[],"StraightFlush":[],"RoyalFlush":[],"ThreeOfAKind":[],"FourOfAKind":[],"FullHouse":[],"Pair":[],"NoHand":[],"Straight":[],"TwoPair":[]}}},"aliases":{"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Types.Card":{"args":[],"type":"{ suit : String, name : String, value : Int, image : String }"}},"message":"Types.Msg"},"versions":{"elm":"0.18.0"}});
+    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Types.Msg":{"args":[],"tags":{"RecieveCards":["Result.Result Http.Error (List Types.Card)"],"Shuffle":[],"CheckHand":["Types.HandType"],"GetShuffledDeck":["List Types.Card"],"Deal":[]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Types.HandType":{"args":[],"tags":{"Flush":[],"HighCard":[],"StraightFlush":[],"RoyalFlush":[],"ThreeOfAKind":[],"FourOfAKind":[],"FullHouse":[],"Pair":[],"NoHand":[],"Straight":[],"TwoPair":[]}}},"aliases":{"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Types.Card":{"args":[],"type":"{ suit : String, name : String, value : Int, image : String }"}},"message":"Types.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])

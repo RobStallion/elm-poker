@@ -1,4 +1,4 @@
-module HandTypes exposing (types)
+module Helpers.HandTypes exposing (types)
 
 
 types =
