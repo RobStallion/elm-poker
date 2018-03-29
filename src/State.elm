@@ -12,7 +12,7 @@ initialModel =
     { deck = []
     , remainingCards = []
     , hand = []
-    , handType = NoHand
+    , handType = Nothing
     , players = []
     , numPlayers = 4
     }
@@ -33,7 +33,7 @@ update msg model =
             ( model, Cmd.none )
 
         Shuffle ->
-            ( { model | handType = NoHand, hand = [], remainingCards = [] }
+            ( { model | handType = Nothing, hand = [], remainingCards = [] }
             , generate GetShuffledDeck (shuffle model.deck)
             )
 
@@ -48,4 +48,4 @@ update msg model =
                 ( { model | hand = hand, remainingCards = remainingCards }, Cmd.none )
 
         CheckHand hand ->
-            ( { model | handType = hand }, Cmd.none )
+            ( { model | handType = Just hand }, Cmd.none )

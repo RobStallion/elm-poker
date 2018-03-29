@@ -126,7 +126,7 @@ createPlayers : Int -> List Player
 createPlayers numPlayers =
     numPlayers
         |> List.range 1
-        |> List.map (\_ -> { hand = [], handType = NoHand })
+        |> List.map (\_ -> { hand = [], handType = Nothing })
 
 
 

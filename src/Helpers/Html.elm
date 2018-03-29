@@ -6,8 +6,8 @@ import Html.Attributes exposing (class, style)
 import Helpers.Card exposing (sortHand)
 
 
-makeCardNodes : List Card -> List (Html Msg)
-makeCardNodes listOfCards =
+makeCardNodes : List Player -> List (Html Msg)
+makeCardNodes players =
     List.map
         (\card ->
             div
@@ -20,4 +20,4 @@ makeCardNodes listOfCards =
                 []
         )
     <|
-        sortHand listOfCards
+        sortHand players
