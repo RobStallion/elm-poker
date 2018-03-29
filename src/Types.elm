@@ -3,6 +3,14 @@ module Types exposing (..)
 import Http
 
 
+type alias Model =
+    { deck : List Card
+    , remainingCards : List Card
+    , players : List Player
+    , numPlayers : Int
+    }
+
+
 type Msg
     = RecieveCards (Result Http.Error (List Card))
     | Shuffle
@@ -11,19 +19,9 @@ type Msg
     | CheckHand HandType
 
 
-type alias Model =
-    { deck : List Card
-    , remainingCards : List Card
-    , hand : List Card
-    , handType : HandType
-    , players : List Player
-    , numPlayers : Int
-    }
-
-
 type alias Player =
     { hand : List Card
-    , handType : HandType
+    , handType : Maybe HandType
     }
 
 
@@ -46,4 +44,3 @@ type HandType
     | TwoPair
     | Pair
     | HighCard
-    | NoHand

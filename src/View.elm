@@ -10,9 +10,9 @@ import Types exposing (..)
 view : Model -> Html Msg
 view model =
     div []
-        [ button [ onClick Deal ] [ text "Deal hand" ]
-        , div [] <| Html.makeCardNodes model.hand
-        , button [ onClick <| CheckHand <| Card.handType <| Card.sortHand model.hand ] [ text "Check hand" ]
-        , h1 [] [ text <| toString model.handType ]
+        [ button [ onClick Deal ] [ text "Deal" ]
+        , div [] <| Html.makeCardNodes model.players
+        , button [ onClick <| CheckHand <| Card.handType <| Card.sortHand model.players ] [ text "Check hand" ]
+        , h1 [] [ text <| toString model.players ]
         , button [ onClick Shuffle ] [ text "Reshuffle deck" ]
         ]

@@ -15414,7 +15414,6 @@ var _user$project$Types$Shuffle = {ctor: 'Shuffle'};
 var _user$project$Types$RecieveCards = function (a) {
 	return {ctor: 'RecieveCards', _0: a};
 };
-var _user$project$Types$NoHand = {ctor: 'NoHand'};
 var _user$project$Types$HighCard = {ctor: 'HighCard'};
 var _user$project$Types$Pair = {ctor: 'Pair'};
 var _user$project$Types$TwoPair = {ctor: 'TwoPair'};
@@ -15448,7 +15447,7 @@ var _user$project$Helpers_Card$createPlayers = function (numPlayers) {
 		function (_p0) {
 			return {
 				hand: {ctor: '[]'},
-				handType: _user$project$Types$NoHand
+				handType: _elm_lang$core$Maybe$Nothing
 			};
 		},
 		A2(_elm_lang$core$List$range, 1, numPlayers));
@@ -15642,7 +15641,7 @@ var _user$project$State$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							handType: _user$project$Types$NoHand,
+							handType: _elm_lang$core$Maybe$Nothing,
 							hand: {ctor: '[]'},
 							remainingCards: {ctor: '[]'}
 						}),
@@ -15675,7 +15674,9 @@ var _user$project$State$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{handType: _p0._0}),
+						{
+							handType: _elm_lang$core$Maybe$Just(_p0._0)
+						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 		}
@@ -15684,7 +15685,7 @@ var _user$project$State$initialModel = {
 	deck: {ctor: '[]'},
 	remainingCards: {ctor: '[]'},
 	hand: {ctor: '[]'},
-	handType: _user$project$Types$NoHand,
+	handType: _elm_lang$core$Maybe$Nothing,
 	players: {ctor: '[]'},
 	numPlayers: 4
 };
@@ -15775,7 +15776,7 @@ var _user$project$Main$main = _elm_lang$html$Html$program(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Types.Msg":{"args":[],"tags":{"RecieveCards":["Result.Result Http.Error (List Types.Card)"],"Shuffle":[],"CheckHand":["Types.HandType"],"GetShuffledDeck":["List Types.Card"],"Deal":[]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Types.HandType":{"args":[],"tags":{"Flush":[],"HighCard":[],"StraightFlush":[],"RoyalFlush":[],"ThreeOfAKind":[],"FourOfAKind":[],"FullHouse":[],"Pair":[],"NoHand":[],"Straight":[],"TwoPair":[]}}},"aliases":{"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Types.Card":{"args":[],"type":"{ suit : String, name : String, value : Int, image : String }"}},"message":"Types.Msg"},"versions":{"elm":"0.18.0"}});
+    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Types.Msg":{"args":[],"tags":{"RecieveCards":["Result.Result Http.Error (List Types.Card)"],"Shuffle":[],"CheckHand":["Types.HandType"],"GetShuffledDeck":["List Types.Card"],"Deal":[]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Types.HandType":{"args":[],"tags":{"Flush":[],"HighCard":[],"StraightFlush":[],"RoyalFlush":[],"ThreeOfAKind":[],"FourOfAKind":[],"FullHouse":[],"Pair":[],"Straight":[],"TwoPair":[]}}},"aliases":{"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Types.Card":{"args":[],"type":"{ suit : String, name : String, value : Int, image : String }"}},"message":"Types.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])
